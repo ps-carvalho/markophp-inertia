@@ -17,7 +17,7 @@ readonly class Vite
     /**
      * Generate Vite script/link tags for the HTML head.
      */
-    public function headTags(string $entry = 'resources/js/app.js'): string
+    public function headTags(string $entry = 'app/web/resources/js/app.js'): string
     {
         if ($this->useDevServer()) {
             return $this->devServerTags($entry);

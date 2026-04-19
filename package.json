@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:ssr": "vite build --ssr resources/js/ssr.js --outDir bootstrap/ssr"
+    "build:ssr": "vite build --ssr app/web/resources/js/ssr.js --outDir bootstrap/ssr"
   },
   "dependencies": {
     "@inertiajs/vue3": "^1.2",

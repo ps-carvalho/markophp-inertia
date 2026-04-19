@@ -48,8 +48,8 @@ test('vite dev server tags include vite client and entry', function () {
     ]);
 
     $vite = new Vite($config, $this->paths);
-    $tags = $vite->headTags('resources/js/app.js');
+    $tags = $vite->headTags('app/web/resources/js/app.js');
 
     expect($tags)->toContain('@vite/client');
-    expect($tags)->toContain('resources/js/app.js');
+    expect($tags)->toContain('app/web/resources/js/app.js');
 });
