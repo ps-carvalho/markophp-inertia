@@ -1,0 +1,32 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    ports:
+      - "8000:8000"
+      - "5173:5173"
+    volumes:
+      - .:/app
+      # Use named volumes for node_modules and vendor so host
+      # and container don't conflict (especially on macOS/Windows)
+      - node_modules:/app/node_modules
+      - vendor:/app/vendor
+      - bootstrap_ssr:/app/bootstrap/ssr
+      - public_build:/app/public/build
+    environment:
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - INERTIA_SSR_ENABLED=true
+      - INERTIA_SSR_URL=http://localhost:13714
+      - PHP_CLI_SERVER_WORKERS=4
+    stdin_open: true
+    tty: true
+    command: composer dev
+
+volumes:
+  node_modules:
+  vendor:
+  bootstrap_ssr:
+  public_build:

@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:ssr": "vite build --ssr app/web/resources/js/ssr.js --outDir bootstrap/ssr"
+    "build:ssr": "vite build --ssr app/web/resources/js/ssr.js --outDir bootstrap/ssr",
+    "dev:all": "concurrently -k \"php -S 0.0.0.0:8000 -t public/\" \"npx vite --host\" \"node bootstrap/ssr/ssr.js\" --names \"PHP,VITE,SSR\" --prefix-colors \"blue,green,yellow\""
   },
   "dependencies": {
     "@inertiajs/vue3": "^1.2",
@@ -15,6 +16,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2",
+    "concurrently": "^9.2.1",
     "vite": "^6.0"
   }
 }

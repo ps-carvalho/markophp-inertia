@@ -21,6 +21,20 @@
             "Marko\\InertiaVue\\": "modules/inertia-vue/src/"
         }
     },
+    "scripts": {
+        "dev": [
+            "Composer\\Config::disableProcessTimeout",
+            "npx concurrently -k \"php -S 0.0.0.0:8000 -t public/\" \"npx vite --host\" \"node bootstrap/ssr/ssr.js\" --names \"PHP,VITE,SSR\" --prefix-colors \"blue,green,yellow\""
+        ],
+        "dev:ssr": [
+            "Composer\\Config::disableProcessTimeout",
+            "npx concurrently -k \"php -S 0.0.0.0:8000 -t public/\" \"npx vite --host\" \"node bootstrap/ssr/ssr.js\" --names \"PHP,VITE,SSR\" --prefix-colors \"blue,green,yellow\""
+        ],
+        "build": [
+            "npm run build",
+            "npm run build:ssr"
+        ]
+    },
     "config": {
         "allow-plugins": {
             "pestphp/pest-plugin": true
