@@ -1,0 +1,29 @@
+{
+  "name": "marko/vite",
+  "type": "marko-module",
+  "description": "Vite integration for the Marko Framework — asset manifest resolution and dev-server detection",
+  "license": "MIT",
+  "require": {
+    "php": "^8.5",
+    "marko/core": "*",
+    "marko/config": "*"
+  },
+  "require-dev": {
+    "pestphp/pest": "^4.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Marko\\Vite\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Marko\\Vite\\Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "marko": {
+      "module": true
+    }
+  }
+}
