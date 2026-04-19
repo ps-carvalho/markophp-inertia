@@ -1,4 +1,5 @@
 <template>
+  <Head title="Profile" />
   <div class="max-w-3xl mx-auto space-y-8">
     <!-- Profile header -->
     <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
@@ -65,6 +66,7 @@
 
 <script setup>
 import { computed } from 'vue';
+import { Head } from '@inertiajs/vue3';
 
 const props = defineProps({
   user: { type: Object, required: true },

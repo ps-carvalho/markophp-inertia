@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Marko\Inertia;
 
+use Closure;
 use JsonException;
 use Marko\Config\ConfigRepositoryInterface;
 use Marko\Inertia\Ssr\SsrClient;
@@ -15,6 +16,9 @@ class Inertia
 {
     /** @var array<string, mixed> */
     private array $shared = [];
+
+    /** @var array<string, mixed> */
+    private array $flash = [];
 
     public function __construct(
         private readonly ConfigRepositoryInterface $config,
@@ -41,7 +45,22 @@ class Inertia
     }
 
     /**
+     * Flash a message to the session (stored for next request).
+     *
+     * In a real app this would use session storage. For now we store
+     * in-memory which works for single-request demos.
+     */
+    public function flash(string $key, mixed $value = null): void
+    {
+        $this->flash[$key] = $value;
+    }
+
+    /**
      * Render an Inertia page response.
+     *
+     * Props can include closures (\Closure) for lazy evaluation.
+     * Lazy props are only resolved when the prop is included in a
+     * partial reload or on the initial full page load.
      *
      * @param array<string, mixed> $props
      *
@@ -52,9 +71,11 @@ class Inertia
         string $component,
         array $props = [],
     ): Response {
+        $props = $this->resolveProps($props, $request, $component);
+
         $page = [
             'component' => $component,
-            'props' => array_merge($this->shared, $props),
+            'props' => $props,
             'url' => $request->path(),
             'version' => $this->version(),
         ];
@@ -104,6 +125,49 @@ class Inertia
         } catch (\Throwable) {
             return null;
         }
+    }
+
+    /**
+     * Resolve props, handling lazy evaluation and partial reloads.
+     *
+     * @param array<string, mixed> $props
+     *
+     * @return array<string, mixed>
+     */
+    private function resolveProps(array $props, Request $request, string $component): array
+    {
+        // Merge shared data (flash messages first, then shared data)
+        $allProps = array_merge(
+            ['flash' => $this->flash],
+            $this->shared,
+            $props,
+        );
+
+        // Clear flash after reading
+        $this->flash = [];
+
+        // Check if this is a partial reload request
+        $partialComponent = $request->header('X-Inertia-Partial-Component');
+        $partialData = $request->header('X-Inertia-Partial-Data');
+
+        $isPartial = $partialComponent !== null
+            && $partialComponent === $component
+            && $partialData !== null;
+
+        if ($isPartial) {
+            $only = array_filter(explode(',', $partialData));
+            // Always include shared/flash data and requested props
+            $allProps = array_intersect_key($allProps, array_flip(array_merge(['flash'], $only)));
+        }
+
+        // Resolve closures (lazy evaluation)
+        foreach ($allProps as $key => $value) {
+            if ($value instanceof Closure) {
+                $allProps[$key] = $value();
+            }
+        }
+
+        return $allProps;
     }
 
     /**

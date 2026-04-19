@@ -1,4 +1,5 @@
 <template>
+  <Head title="Dashboard" />
   <div class="space-y-8">
     <!-- Welcome -->
     <div class="flex items-center justify-between">
@@ -132,15 +133,16 @@
         <h3 class="text-lg font-semibold text-white">Ready to build something amazing?</h3>
         <p class="mt-1 text-indigo-100 text-sm">Marko + Inertia + Vue + Tailwind gives you everything you need.</p>
       </div>
-      <a href="/profile" class="bg-white text-indigo-600 px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-indigo-50 transition-colors">
+      <Link href="/profile" class="bg-white text-indigo-600 px-5 py-2.5 rounded-lg font-medium text-sm hover:bg-indigo-50 transition-colors">
         View Profile
-      </a>
+      </Link>
     </div>
   </div>
 </template>
 
 <script setup>
 import { computed } from 'vue';
+import { Head, Link } from '@inertiajs/vue3';
 
 const props = defineProps({
   user: { type: Object, required: true },

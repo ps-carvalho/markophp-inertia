@@ -7,6 +7,7 @@ use Marko\Core\Path\ProjectPaths;
 use Marko\Inertia\Inertia;
 use Marko\Inertia\Ssr\SsrClient;
 use Marko\Routing\Http\Request;
+use Marko\Routing\Http\Response;
 use Marko\Vite\Vite;
 
 beforeEach(function () {
@@ -83,4 +84,67 @@ test('inertia location redirect returns x-inertia-location header', function () 
     $response = $inertia->location('https://example.com');
 
     expect($response->headers()['X-Inertia-Location'])->toBe('https://example.com');
+});
+
+test('inertia resolves lazy props on full load', function () {
+    $inertia = createInertia();
+    $called = false;
+
+    $request = new Request(server: ['HTTP_X_INERTIA' => 'true']);
+    $response = $inertia->render($request, 'Dashboard', [
+        'user' => ['name' => 'Test'],
+        'expensive' => function () use (&$called) {
+            $called = true;
+            return ['data' => 'loaded'];
+        },
+    ]);
+
+    expect($called)->toBeTrue();
+
+    $data = json_decode($response->body(), true);
+    expect($data['props']['expensive']['data'])->toBe('loaded');
+});
+
+test('inertia skips lazy props on partial reload when not requested', function () {
+    $inertia = createInertia();
+    $called = false;
+
+    $request = new Request(server: [
+        'HTTP_X_INERTIA' => 'true',
+        'HTTP_X_INERTIA_PARTIAL_COMPONENT' => 'Dashboard',
+        'HTTP_X_INERTIA_PARTIAL_DATA' => 'user',
+    ]);
+
+    $response = $inertia->render($request, 'Dashboard', [
+        'user' => ['name' => 'Test'],
+        'expensive' => function () use (&$called) {
+            $called = true;
+            return ['data' => 'loaded'];
+        },
+    ]);
+
+    expect($called)->toBeFalse();
+
+    $data = json_decode($response->body(), true);
+    expect($data['props']['user']['name'])->toBe('Test');
+    expect($data['props'])->not->toHaveKey('expensive');
+});
+
+test('inertia includes flash in partial reloads', function () {
+    $inertia = createInertia();
+    $inertia->flash('success', 'Saved!');
+
+    $request = new Request(server: [
+        'HTTP_X_INERTIA' => 'true',
+        'HTTP_X_INERTIA_PARTIAL_COMPONENT' => 'Dashboard',
+        'HTTP_X_INERTIA_PARTIAL_DATA' => 'user',
+    ]);
+
+    $response = $inertia->render($request, 'Dashboard', [
+        'user' => ['name' => 'Test'],
+    ]);
+
+    $data = json_decode($response->body(), true);
+    expect($data['props']['flash']['success'])->toBe('Saved!');
+    expect($data['props']['user']['name'])->toBe('Test');
 });
