@@ -19,9 +19,13 @@
         "psr-4": {
             "App\\Foo\\": "app/foo/src/",
             "App\\Web\\": "app/web/src/",
+            "App\\ReactWeb\\": "app/react-web/src/",
+            "App\\SvelteWeb\\": "app/svelte-web/src/",
             "Marko\\Vite\\": "modules/vite/src/",
             "Marko\\Inertia\\": "modules/inertia/src/",
-            "Marko\\InertiaVue\\": "modules/inertia-vue/src/"
+            "Marko\\InertiaVue\\": "modules/inertia-vue/src/",
+            "Marko\\InertiaReact\\": "modules/inertia-react/src/",
+            "Marko\\InertiaSvelte\\": "modules/inertia-svelte/src/"
         }
     },
     "scripts": {

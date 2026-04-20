@@ -1,0 +1,17 @@
+{
+  "name": "app/react-web",
+  "type": "marko-module",
+  "require": {
+    "marko/inertia-react": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\ReactWeb\\": "src/"
+    }
+  },
+  "extra": {
+    "marko": {
+      "module": true
+    }
+  }
+}

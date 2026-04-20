@@ -1,0 +1,30 @@
+{
+  "name": "marko/inertia-react",
+  "type": "marko-module",
+  "description": "React companion for marko/inertia — configuration for React client and SSR entries",
+  "license": "MIT",
+  "require": {
+    "php": "^8.5",
+    "marko/core": "*",
+    "marko/inertia": "*",
+    "marko/vite": "*"
+  },
+  "require-dev": {
+    "pestphp/pest": "^4.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Marko\\InertiaReact\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Marko\\InertiaReact\\Tests\\": "tests/"
+    }
+  },
+  "extra": {
+    "marko": {
+      "module": true
+    }
+  }
+}

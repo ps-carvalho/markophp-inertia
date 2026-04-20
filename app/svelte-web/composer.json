@@ -1,0 +1,17 @@
+{
+  "name": "app/svelte-web",
+  "type": "marko-module",
+  "require": {
+    "marko/inertia-svelte": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\SvelteWeb\\": "src/"
+    }
+  },
+  "extra": {
+    "marko": {
+      "module": true
+    }
+  }
+}

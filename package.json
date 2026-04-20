@@ -4,13 +4,23 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "build:ssr": "vite build --ssr app/web/resources/js/ssr.js --outDir bootstrap/ssr",
+    "build:ssr": "npm run build:ssr:vue && npm run build:ssr:react && npm run build:ssr:svelte",
+    "build:ssr:vue": "vite build --ssr app/web/resources/js/ssr.js --outDir bootstrap/ssr",
+    "build:ssr:react": "vite build --ssr app/react-web/resources/js/ssr.jsx --outDir bootstrap/ssr/react",
+    "build:ssr:svelte": "vite build --ssr app/svelte-web/resources/js/ssr.js --outDir bootstrap/ssr/svelte",
     "dev:all": "concurrently -k \"php -S 0.0.0.0:8000 -t public/\" \"npx vite --host\" \"node bootstrap/ssr/ssr.js\" --names \"PHP,VITE,SSR\" --prefix-colors \"blue,green,yellow\""
   },
   "dependencies": {
+    "@inertiajs/react": "^3.0.3",
+    "@inertiajs/svelte": "^3.0.3",
     "@inertiajs/vue3": "^1.2",
+    "@sveltejs/vite-plugin-svelte": "^5.1.1",
     "@tailwindcss/vite": "^4.2.2",
+    "@vitejs/plugin-react": "^5.2.0",
     "@vue/server-renderer": "^3.5.32",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "svelte": "^5.55.4",
     "tailwindcss": "^4.2.2",
     "vue": "^3.5"
   },

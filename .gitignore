@@ -1,6 +1,7 @@
 /node_modules
 /vendor
 /.phpunit.cache/
+/storage/
 
 # Frontend and SSR build output
 /public/build/

@@ -64,7 +64,26 @@ test('inertia returns html for non-inertia requests', function () {
     expect($response->statusCode())->toBe(200);
     expect($response->headers()['Content-Type'])->toBe('text/html; charset=utf-8');
     expect($response->body())->toContain('<!DOCTYPE html>');
+    expect($response->body())->toContain('<script data-page="app" type="application/json">');
     expect($response->body())->toContain('data-page=');
+});
+
+test('inertia html can target a custom vite asset entry', function () {
+    $inertia = createInertia(viteConfig: [
+        'devServerUrl' => 'http://localhost:5173',
+        'devServerStylesheets' => [],
+        'useDevServer' => true,
+    ]);
+    $request = new Request();
+
+    $response = $inertia->render(
+        request: $request,
+        component: 'ReactHome',
+        assetEntry: 'app/react-web/resources/js/app.jsx',
+    );
+
+    expect($response->body())->toContain('http://localhost:5173/app/react-web/resources/js/app.jsx');
+    expect($response->body())->not->toContain('app/web/resources/js/app.js');
 });
 
 test('inertia merges shared data with page props', function () {

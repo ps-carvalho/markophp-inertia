@@ -70,6 +70,7 @@ class Inertia
         Request $request,
         string $component,
         array $props = [],
+        string $assetEntry = 'app/web/resources/js/app.js',
     ): Response {
         $props = $this->resolveProps($props, $request, $component);
 
@@ -91,7 +92,7 @@ class Inertia
             );
         }
 
-        return $this->renderRootView($page);
+        return $this->renderRootView($page, $assetEntry);
     }
 
     /**
@@ -177,12 +178,12 @@ class Inertia
      *
      * @throws JsonException
      */
-    private function renderRootView(array $page): Response
+    private function renderRootView(array $page, string $assetEntry): Response
     {
         $pageJson = json_encode($page, JSON_THROW_ON_ERROR | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT);
-        $pageJson = htmlspecialchars($pageJson, ENT_QUOTES, 'UTF-8');
+        $pageJsonAttribute = htmlspecialchars($pageJson, ENT_QUOTES, 'UTF-8');
 
-        $headTags = $this->vite->headTags();
+        $headTags = $this->vite->headTags($assetEntry);
         $ssr = $this->trySsr($page);
 
         $ssrHead = $ssr['head'] ?? '';
@@ -191,7 +192,8 @@ class Inertia
         if ($ssrBody !== null) {
             $bodyHtml = $ssrBody;
         } else {
-            $bodyHtml = '<div id="app" data-page="' . $pageJson . '"></div>';
+            $bodyHtml = '<script data-page="app" type="application/json">' . $pageJson . '</script>'
+                . '<div id="app" data-page="' . $pageJsonAttribute . '"></div>';
         }
 
         $html = <<<HTML

@@ -57,4 +57,41 @@ test('vite dev server tags include vite client and entry', function () {
     expect($tags)->toContain('app/web/resources/js/app.js');
     expect($tags)->toContain('rel="stylesheet"');
     expect($tags)->toContain('app/web/resources/css/app.css');
+    expect($tags)->not->toContain('@react-refresh');
+});
+
+test('vite dev server tags use the configured dev server url', function () {
+    $config = new ConfigRepository([
+        'vite' => [
+            'devServerUrl' => 'http://localhost:5174',
+            'devServerStylesheets' => [],
+            'useDevServer' => true,
+        ],
+    ]);
+
+    $vite = new Vite($config, $this->paths);
+    $tags = $vite->headTags('app/react-web/resources/js/app.jsx');
+
+    expect($tags)->toContain('http://localhost:5174/@vite/client');
+    expect($tags)->toContain('http://localhost:5174/app/react-web/resources/js/app.jsx');
+    expect($tags)->toContain('http://localhost:5174/@react-refresh');
+    expect($tags)->toContain('window.$RefreshReg$');
+    expect($tags)->not->toContain('localhost:5173');
+});
+
+test('vite dev server tags skip react refresh preamble for svelte entries', function () {
+    $config = new ConfigRepository([
+        'vite' => [
+            'devServerUrl' => 'http://localhost:5173',
+            'devServerStylesheets' => [],
+            'useDevServer' => true,
+        ],
+    ]);
+
+    $vite = new Vite($config, $this->paths);
+    $tags = $vite->headTags('app/svelte-web/resources/js/app.js');
+
+    expect($tags)->toContain('app/svelte-web/resources/js/app.js');
+    expect($tags)->not->toContain('@react-refresh');
+    expect($tags)->not->toContain('window.$RefreshReg$');
 });
