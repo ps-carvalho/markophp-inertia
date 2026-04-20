@@ -44,11 +44,38 @@ readonly class Vite
     private function devServerTags(string $entry): string
     {
         $url = rtrim($this->config->getString('vite.devServerUrl'), '/');
+        $tags = '';
 
-        return <<<HTML
+        foreach ($this->devServerStylesheets() as $stylesheet) {
+            $stylesheet = ltrim($stylesheet, '/');
+            $tags .= "<link rel=\"stylesheet\" href=\"{$url}/{$stylesheet}\">\n";
+        }
+
+        $tags .= <<<HTML
 <script type="module" src="{$url}/@vite/client"></script>
 <script type="module" src="{$url}/{$entry}"></script>
 HTML;
+
+        return $tags;
+    }
+
+    /**
+     * Stylesheets served directly by Vite in dev mode.
+     *
+     * @return list<string>
+     */
+    private function devServerStylesheets(): array
+    {
+        try {
+            $stylesheets = $this->config->getArray('vite.devServerStylesheets');
+        } catch (\Throwable) {
+            return [];
+        }
+
+        return array_values(array_filter(
+            $stylesheets,
+            static fn (mixed $stylesheet): bool => is_string($stylesheet) && $stylesheet !== '',
+        ));
     }
 
     /**

@@ -4,8 +4,50 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "642ed78dba48e1f5c3126ffe9be5eed9",
+    "content-hash": "3e3b98573eff34a3b991fded7fc5325e",
     "packages": [
+        {
+            "name": "marko/authentication",
+            "version": "0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/marko-php/marko-authentication.git",
+                "reference": "64725e04daa7e55efd02bccdc4d33b0c8fd2b782"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/marko-php/marko-authentication/zipball/64725e04daa7e55efd02bccdc4d33b0c8fd2b782",
+                "reference": "64725e04daa7e55efd02bccdc4d33b0c8fd2b782",
+                "shasum": ""
+            },
+            "require": {
+                "marko/core": "self.version",
+                "php": "^8.5"
+            },
+            "require-dev": {
+                "marko/testing": "self.version"
+            },
+            "type": "marko-module",
+            "extra": {
+                "marko": {
+                    "module": true
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Marko\\Authentication\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Authentication and authorization for Marko Framework",
+            "support": {
+                "source": "https://github.com/marko-php/marko-authentication/tree/0.1.0"
+            },
+            "time": "2026-03-26T16:28:58+00:00"
+        },
         {
             "name": "marko/cli",
             "version": "0.1.0",
@@ -398,6 +440,88 @@
             "description": "Marko Framework Routing",
             "support": {
                 "source": "https://github.com/marko-php/marko-routing/tree/0.1.0"
+            },
+            "time": "2026-03-25T17:53:35+00:00"
+        },
+        {
+            "name": "marko/session",
+            "version": "0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/marko-php/marko-session.git",
+                "reference": "46c731c86c4e5bce3e6e0087713304c6c75bc71f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/marko-php/marko-session/zipball/46c731c86c4e5bce3e6e0087713304c6c75bc71f",
+                "reference": "46c731c86c4e5bce3e6e0087713304c6c75bc71f",
+                "shasum": ""
+            },
+            "require": {
+                "marko/config": "self.version",
+                "marko/core": "self.version",
+                "php": "^8.5"
+            },
+            "type": "marko-module",
+            "extra": {
+                "marko": {
+                    "module": true
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Marko\\Session\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Session interfaces and infrastructure for Marko Framework",
+            "support": {
+                "source": "https://github.com/marko-php/marko-session/tree/0.1.0"
+            },
+            "time": "2026-03-26T16:28:58+00:00"
+        },
+        {
+            "name": "marko/session-file",
+            "version": "0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/marko-php/marko-session-file.git",
+                "reference": "843672d5ab391374803598b2745621192c5e5855"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/marko-php/marko-session-file/zipball/843672d5ab391374803598b2745621192c5e5855",
+                "reference": "843672d5ab391374803598b2745621192c5e5855",
+                "shasum": ""
+            },
+            "require": {
+                "marko/session": "self.version",
+                "php": "^8.5"
+            },
+            "require-dev": {
+                "marko/testing": "self.version"
+            },
+            "type": "marko-module",
+            "extra": {
+                "marko": {
+                    "module": true
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Marko\\Session\\File\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "File-based session driver for Marko Framework",
+            "support": {
+                "source": "https://github.com/marko-php/marko-session-file/tree/0.1.0"
             },
             "time": "2026-03-25T17:53:35+00:00"
         },

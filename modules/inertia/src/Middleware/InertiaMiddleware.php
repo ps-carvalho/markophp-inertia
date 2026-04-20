@@ -23,6 +23,10 @@ readonly class InertiaMiddleware implements MiddlewareInterface
             return $response;
         }
 
+        if (in_array($response->statusCode(), [301, 302, 303, 307, 308], true)) {
+            return $response;
+        }
+
         $headers = $response->headers();
         $headers['Vary'] = 'Accept';
         $headers['X-Inertia'] = 'true';
@@ -43,21 +47,6 @@ readonly class InertiaMiddleware implements MiddlewareInterface
                     'X-Inertia-Location' => $request->path(),
                 ]),
             );
-        }
-
-        // Convert 302/301 redirects to 409 Conflict for Inertia requests
-        if (in_array($response->statusCode(), [301, 302], true)) {
-            $location = $response->headers()['Location'] ?? null;
-
-            if ($location !== null) {
-                return new Response(
-                    body: '',
-                    statusCode: 409,
-                    headers: array_merge($headers, [
-                        'X-Inertia-Location' => $location,
-                    ]),
-                );
-            }
         }
 
         return new Response(

@@ -17,7 +17,7 @@
           <p class="text-gray-500">{{ user.email }}</p>
         </div>
         <div class="mt-6 flex gap-3">
-          <span class="px-3 py-1 bg-indigo-50 text-indigo-700 rounded-full text-sm font-medium">Developer</span>
+          <span class="px-3 py-1 bg-indigo-50 text-indigo-700 rounded-full text-sm font-medium">{{ user.role || 'Developer' }}</span>
           <span class="px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full text-sm font-medium">Active</span>
         </div>
       </div>
@@ -30,15 +30,15 @@
         <dl class="space-y-4">
           <div class="flex justify-between">
             <dt class="text-sm text-gray-500">Member since</dt>
-            <dd class="text-sm font-medium text-gray-900">January 2024</dd>
+            <dd class="text-sm font-medium text-gray-900">{{ user.joined || 'January 2024' }}</dd>
           </div>
           <div class="flex justify-between">
             <dt class="text-sm text-gray-500">Location</dt>
-            <dd class="text-sm font-medium text-gray-900">San Francisco, CA</dd>
+            <dd class="text-sm font-medium text-gray-900">{{ user.location || 'San Francisco, CA' }}</dd>
           </div>
           <div class="flex justify-between">
-            <dt class="text-sm text-gray-500">Timezone</dt>
-            <dd class="text-sm font-medium text-gray-900">PST (UTC-8)</dd>
+            <dt class="text-sm text-gray-500">Bio</dt>
+            <dd class="text-sm font-medium text-gray-900 text-right">{{ user.bio || 'Full-stack developer' }}</dd>
           </div>
         </dl>
       </div>

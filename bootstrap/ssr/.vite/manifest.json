@@ -1,8 +1,0 @@
-{
-  "app/web/resources/js/ssr.js": {
-    "file": "ssr.js",
-    "name": "ssr",
-    "src": "app/web/resources/js/ssr.js",
-    "isEntry": true
-  }
-}

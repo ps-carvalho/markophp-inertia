@@ -43,6 +43,9 @@ test('vite dev server tags include vite client and entry', function () {
     $config = new ConfigRepository([
         'vite' => [
             'devServerUrl' => 'http://localhost:5173',
+            'devServerStylesheets' => [
+                'app/web/resources/css/app.css',
+            ],
             'useDevServer' => true,
         ],
     ]);
@@ -52,4 +55,6 @@ test('vite dev server tags include vite client and entry', function () {
 
     expect($tags)->toContain('@vite/client');
     expect($tags)->toContain('app/web/resources/js/app.js');
+    expect($tags)->toContain('rel="stylesheet"');
+    expect($tags)->toContain('app/web/resources/css/app.css');
 });
