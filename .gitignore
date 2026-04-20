@@ -1,2 +1,6 @@
 /node_modules
 /vendor
+
+# Frontend and SSR build output
+/public/build/
+/bootstrap/ssr/

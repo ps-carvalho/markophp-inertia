@@ -1,6 +1,5 @@
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
-import { Transition } from 'vue';
 import '../css/app.css';
 
 // Auto-discover pages from all modules
@@ -34,21 +33,7 @@ createInertiaApp({
   },
   setup({ el, App, props, plugin }) {
     createApp({
-      render: () =>
-        h(
-          Transition,
-          {
-            name: 'page',
-            mode: 'out-in',
-            enterActiveClass: 'transition-opacity duration-200 ease-out',
-            enterFromClass: 'opacity-0',
-            enterToClass: 'opacity-100',
-            leaveActiveClass: 'transition-opacity duration-150 ease-in',
-            leaveFromClass: 'opacity-100',
-            leaveToClass: 'opacity-0',
-          },
-          () => h(App, props),
-        ),
+      render: () => h(App, props),
     })
       .use(plugin)
       .mount(el);

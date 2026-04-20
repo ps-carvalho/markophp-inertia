@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Web\Controller;
 
+use Marko\Authentication\AuthManager;
+use Marko\Authentication\Middleware\AuthMiddleware;
 use Marko\Inertia\Inertia;
 use Marko\Inertia\Middleware\InertiaMiddleware;
 use Marko\Routing\Attributes\Get;
@@ -11,18 +13,21 @@ use Marko\Routing\Attributes\Middleware;
 use Marko\Routing\Http\Request;
 use Marko\Routing\Http\Response;
 
-#[Middleware([InertiaMiddleware::class])]
+#[Middleware([InertiaMiddleware::class, AuthMiddleware::class])]
 class PageController
 {
     public function __construct(
         private Inertia $inertia,
+        private AuthManager $auth,
     ) {}
 
     #[Get("/dashboard")]
     public function dashboard(Request $request): Response
     {
+        $user = $this->auth->user();
+
         return $this->inertia->render($request, 'Dashboard', [
-            'user' => ['name' => 'Marko User', 'email' => 'user@example.com'],
+            'user' => $user?->toArray() ?? [],
             'chartData' => [45, 62, 38, 75, 52, 88, 67],
             'activities' => [
                 ['title' => 'Deployed new version to production', 'time' => '2 hours ago'],
@@ -37,8 +42,10 @@ class PageController
     #[Get("/profile")]
     public function profile(Request $request): Response
     {
+        $user = $this->auth->user();
+
         return $this->inertia->render($request, 'Profile', [
-            'user' => ['name' => 'Marko User', 'email' => 'user@example.com'],
+            'user' => $user?->toArray() ?? [],
         ]);
     }
 }
