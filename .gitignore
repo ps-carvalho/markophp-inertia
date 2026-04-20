@@ -4,4 +4,5 @@
 
 # Frontend and SSR build output
 /public/build/
+/public/storage/
 /bootstrap/ssr/
