@@ -1,8 +1,8 @@
 # Marko Application Skeleton
 
-> A modern, full-stack application skeleton for the [Marko Framework](https://marko.build) featuring **Inertia.js**, **Vue 3**, **Tailwind CSS v4**, and **Vite** — with first-class **SSR** support.
+> A modern, full-stack application skeleton for the [Marko Framework](https://marko.build) featuring **Inertia.js**, **Vue 3**, **React 19**, **Svelte 5**, **Tailwind CSS v4**, and **Vite**.
 
-This skeleton provides a complete starting point for building single-page applications (SPAs) with a PHP backend and a Vue frontend, all within Marko's modular architecture.
+This skeleton provides a complete starting point for building single-page applications (SPAs) with a PHP backend and interchangeable Inertia frontend adapters, all within Marko's modular architecture.
 
 ---
 
@@ -10,10 +10,10 @@ This skeleton provides a complete starting point for building single-page applic
 
 - **🚀 Marko Framework** — A lightweight, modular PHP 8.5+ framework built for flexibility
 - **⚡ Inertia.js** — Build SPAs without building an API. Server-side routing with client-side navigation
-- **🎨 Vue 3** — Reactive frontend with Composition API support
+- **🎨 Vue 3, React 19, and Svelte 5 demos** — Three frontend adapters running from separate Marko modules
 - **💨 Tailwind CSS v4** — Utility-first styling with Vite integration
 - **🔥 Vite HMR** — Lightning-fast hot module replacement for development
-- **🖥️ Server-Side Rendering** — Vue SSR support via a Node.js render server for better SEO and performance
+- **🖥️ Server-Side Rendering** — Vue SSR server plus React/Svelte SSR build entries for adapter demos
 - **📦 Modular Architecture** — Self-contained modules with auto-discovery (bindings, middleware, config, routes)
 - **🧪 Pest PHP** — Modern, elegant testing framework included
 - **🐳 Docker Ready** — Multi-stage Dockerfile and docker-compose for consistent development environments
@@ -25,7 +25,7 @@ This skeleton provides a complete starting point for building single-page applic
 ```
 .
 ├── app/
-│   ├── web/                  # Website module (controllers, Vue pages, layouts)
+│   ├── web/                  # Vue/Inertia module
 │   │   ├── resources/
 │   │   │   ├── js/
 │   │   │   │   ├── app.js    # Client entry point
@@ -35,11 +35,19 @@ This skeleton provides a complete starting point for building single-page applic
 │   │   │   └── css/
 │   │   │       └── app.css   # Tailwind entry
 │   │   └── src/Controller/
+│   ├── react-web/            # React/Inertia demo module
+│   │   ├── resources/js/     # app.jsx, ssr.jsx, React pages
+│   │   └── src/Controller/
+│   ├── svelte-web/           # Svelte/Inertia demo module
+│   │   ├── resources/js/     # app.js, ssr.js, Svelte pages
+│   │   └── src/Controller/
 │   └── foo/                  # Example plain Marko module
 │
 ├── modules/
 │   ├── inertia/              # Core Inertia.js adapter (middleware, shared data, lazy props, SSR client)
 │   ├── inertia-vue/          # Vue-specific Inertia companion package
+│   ├── inertia-react/        # React-specific Inertia companion package
+│   ├── inertia-svelte/       # Svelte-specific Inertia companion package
 │   └── vite/                 # Vite integration (manifest resolution, dev-server detection)
 │
 ├── config/                   # Root configuration
@@ -96,7 +104,23 @@ This will start:
 - **Vite** HMR server on `http://localhost:5173`
 - **SSR** rendering server on `http://localhost:13714` (internal)
 
-Visit [http://localhost:8000/dashboard](http://localhost:8000/dashboard) to see the demo application.
+If port `5173` is already in use, change both Vite values in `.env` before starting the servers:
+
+```bash
+VITE_DEV_SERVER_URL=http://localhost:5174
+VITE_DEV_SERVER_PORT=5174
+```
+
+Then restart `composer dev` so PHP emits tags for the same Vite server URL that Vite is actually using.
+
+Visit one of the demo routes:
+
+| Route | Adapter | Module |
+|-------|---------|--------|
+| `/` | Vue 3 | `app/web` |
+| `/dashboard` | Vue 3 | `app/web` |
+| `/react` | React 19 | `app/react-web` |
+| `/svelte` | Svelte 5 | `app/svelte-web` |
 
 #### Available Commands
 
@@ -105,9 +129,12 @@ Visit [http://localhost:8000/dashboard](http://localhost:8000/dashboard) to see 
 | `composer dev` | Run PHP + Vite + SSR concurrently |
 | `npm run dev` | Run Vite dev server only |
 | `npm run build` | Build production assets |
-| `npm run build:ssr` | Build SSR bundle |
+| `npm run build:ssr` | Build Vue, React, and Svelte SSR bundles |
+| `npm run build:ssr:vue` | Build the Vue SSR server bundle |
+| `npm run build:ssr:react` | Build the React SSR entry bundle |
+| `npm run build:ssr:svelte` | Build the Svelte SSR entry bundle |
 | `composer build` | Build both client and SSR assets |
-| `vendor/bin/pest modules/*/tests` | Run the test suite |
+| `vendor/bin/pest` | Run the full test suite |
 
 ### Docker Development
 
@@ -119,9 +146,18 @@ docker compose up --build
 
 Ports exposed:
 - `8000` — PHP application
-- `5173` — Vite HMR server
+- `5174` — Vite HMR server on the host, mapped to `5173` inside the container
+
+The Docker configuration sets `VITE_DEV_SERVER_URL=http://localhost:5174` for you, so browser-loaded Vite assets point at the host port that is actually published.
 
 The container uses named volumes for `node_modules`, `vendor`, `bootstrap/ssr`, and `public/build` to avoid conflicts between host and container filesystems.
+
+If Docker reports a missing JavaScript package after dependencies change, refresh the named volumes:
+
+```bash
+docker compose down -v
+docker compose up --build
+```
 
 ---
 
@@ -133,11 +169,15 @@ The project includes a custom Inertia.js adapter built specifically for Marko:
 
 - **`modules/inertia`** — Core protocol implementation:
   - `Inertia` response factory with shared data and lazy prop evaluation
-  - `InertiaMiddleware` — handles `X-Inertia` headers, 302 → 409 redirects, version mismatch
+  - `InertiaMiddleware` — handles `X-Inertia` headers, `Vary: Accept`, and asset version mismatch responses
   - `SsrClient` — POSTs render requests to the Node.js SSR server
   - Flash message support
 
 - **`modules/inertia-vue`** — Vue 3 companion package with configuration for root views, Vite, and SSR settings
+
+- **`modules/inertia-react`** — React companion package with client and SSR entry configuration
+
+- **`modules/inertia-svelte`** — Svelte companion package with client and SSR entry configuration
 
 - **`modules/vite`** — Standalone Vite integration for asset manifest resolution and dev-server tag injection
 
@@ -165,7 +205,7 @@ return [
 
 ### Page Auto-Discovery
 
-Vue pages are auto-discovered from all modules using Vite's glob imports:
+Each frontend module auto-discovers pages for its own adapter using Vite glob imports:
 
 ```javascript
 // app/web/resources/js/app.js
@@ -177,6 +217,21 @@ const pages = import.meta.glob([
 
 This means you can add pages anywhere in `app/` or `modules/` and they will be automatically available to Inertia.
 
+React and Svelte use the same pattern with framework-specific extensions:
+
+- React pages: `app/**/resources/js/pages/**/*.{jsx,tsx}`
+- Svelte pages: `app/**/resources/js/pages/**/*.svelte`
+
+### Adding Another Frontend Demo
+
+The React and Svelte demos show the pattern for adding an alternate Inertia adapter:
+
+1. Create a Marko module under `app/`, for example `app/react-web`.
+2. Add a controller that calls `$this->inertia->render(..., assetEntry: 'app/react-web/resources/js/app.jsx')`.
+3. Add a Vite entry file that calls the adapter's `createInertiaApp`.
+4. Register the entry in `vite.config.js` under `build.rollupOptions.input`.
+5. Add a companion module under `modules/` if the adapter needs shared config.
+
 ---
 
 ## 🧪 Testing
@@ -184,25 +239,29 @@ This means you can add pages anywhere in `app/` or `modules/` and they will be a
 Tests are written with [Pest PHP](https://pestphp.com/):
 
 ```bash
-# Run all module tests
-vendor/bin/pest modules/*/tests
+# Run all tests
+vendor/bin/pest
 
 # Run tests for a specific module
 vendor/bin/pest modules/vite/tests
 vendor/bin/pest modules/inertia/tests
 vendor/bin/pest modules/inertia-vue/tests
+vendor/bin/pest modules/inertia-react/tests
+vendor/bin/pest modules/inertia-svelte/tests
 ```
 
 ---
 
 ## 📖 Demo Pages
 
-The skeleton ships with two example pages to demonstrate the stack:
+The skeleton ships with multiple example pages to demonstrate the stack:
 
 - **Dashboard** (`/dashboard`) — Stats cards, SVG chart, activity feed, and flash messages
 - **Profile** (`/profile`) — User profile with gradient header, avatar, and account details
+- **React Demo** (`/react`) — Independent React/Inertia Marko module and Vite entry
+- **Svelte Demo** (`/svelte`) — Independent Svelte/Inertia Marko module and Vite entry
 
-Both pages use `AppLayout.vue` as a shared layout with sidebar navigation and demonstrate Inertia `<Link>` SPA navigation and `<Head>` title management.
+The Vue pages use `AppLayout.vue` as a shared layout with sidebar navigation and demonstrate Inertia `<Link>` SPA navigation and `<Head>` title management. React and Svelte are intentionally separate modules so you can inspect each adapter without mixing component systems.
 
 ---
 
@@ -216,7 +275,7 @@ Contributions are welcome and appreciated! Whether it's bug reports, feature req
 2. **Set up** the project locally using the instructions above
 3. **Make your changes** — whether fixing a bug or adding a feature
 4. **Write tests** — ensure your changes are covered by Pest tests
-5. **Run the test suite** — `vendor/bin/pest modules/*/tests`
+5. **Run the test suite** — `vendor/bin/pest`
 6. **Submit a pull request** with a clear description of your changes
 
 ### Development Guidelines
@@ -247,5 +306,7 @@ This project is open-sourced software licensed under the [MIT license](LICENSE).
 - [Marko Framework Documentation](https://marko.build/docs/)
 - [Inertia.js Documentation](https://inertiajs.com/)
 - [Vue 3 Documentation](https://vuejs.org/)
+- [React Documentation](https://react.dev/)
+- [Svelte Documentation](https://svelte.dev/)
 - [Tailwind CSS Documentation](https://tailwindcss.com/)
 - [Vite Documentation](https://vitejs.dev/)

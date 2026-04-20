@@ -51,12 +51,37 @@ readonly class Vite
             $tags .= "<link rel=\"stylesheet\" href=\"{$url}/{$stylesheet}\">\n";
         }
 
+        if ($this->isReactEntry($entry)) {
+            $tags .= $this->reactRefreshPreamble($url) . "\n";
+        }
+
         $tags .= <<<HTML
 <script type="module" src="{$url}/@vite/client"></script>
 <script type="module" src="{$url}/{$entry}"></script>
 HTML;
 
         return $tags;
+    }
+
+    /**
+     * React Fast Refresh expects this preamble when Vite is not serving the
+     * application HTML itself.
+     */
+    private function reactRefreshPreamble(string $url): string
+    {
+        return <<<HTML
+<script type="module">
+import { injectIntoGlobalHook } from "{$url}/@react-refresh";
+injectIntoGlobalHook(window);
+window.\$RefreshReg\$ = () => {};
+window.\$RefreshSig\$ = () => (type) => type;
+</script>
+HTML;
+    }
+
+    private function isReactEntry(string $entry): bool
+    {
+        return str_ends_with($entry, '.jsx') || str_ends_with($entry, '.tsx');
     }
 
     /**
