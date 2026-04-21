@@ -46,6 +46,9 @@ ENV PATH="/root/.composer/vendor/bin:${PATH}"
 # ------------------------------------------------------------------
 FROM base AS dev
 
+# Copy local path repository packages before Composer resolves dependencies.
+COPY packages ./packages
+
 # Copy dependency manifests and install so named volumes are seeded
 COPY composer.json composer.lock ./
 RUN composer install --no-interaction
@@ -67,6 +70,9 @@ CMD ["composer", "dev"]
 # Production stage: copy code, install deps, build assets
 # ------------------------------------------------------------------
 FROM base AS prod
+
+# Copy local path repository packages before Composer resolves dependencies.
+COPY packages ./packages
 
 # Copy dependency manifests first for layer caching
 COPY composer.json composer.lock ./

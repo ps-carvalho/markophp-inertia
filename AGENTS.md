@@ -24,10 +24,11 @@ This is `marko/skeleton`, the official application skeleton for the Marko Framew
 ├── public/index.php      # Web entry point — boots Application and handles the request
 ├── app/                  # Your application modules (one subdirectory per module)
 │   └── foo/              # Example module with its own composer.json and src/
-├── modules/              # Third-party modules (same structure as app/)
+├── modules/              # Optional local modules (same structure as app/)
 ├── config/               # Root configuration files (PHP files returning arrays)
 ├── storage/              # Logs, cache, sessions
 ├── vendor/               # Composer dependencies
+├── packages/             # Ignored local path repository packages
 ├── .env                  # Environment variables (copy from .env.example)
 ├── .marko/dev.json       # Dev server process state (auto-managed)
 ├── composer.json         # Project dependencies
@@ -35,6 +36,8 @@ This is `marko/skeleton`, the official application skeleton for the Marko Framew
 ```
 
 **Key rule:** Every module — whether in `app/`, `modules/`, or `vendor/` — is a directory containing at minimum a `composer.json`. The framework discovers and loads them automatically.
+
+The Inertia/Vite integrations are developed as individual Composer packages in `packages/` and installed into this app through the path repository in root `composer.json`. The main app repository ignores `packages/`; version those packages separately. Require only the adapter package needed by the app (`marko/inertia-vue`, `marko/inertia-react`, or `marko/inertia-svelte`); those adapters pull in `marko/inertia` and `marko/vite`.
 
 ---
 

@@ -43,12 +43,14 @@ This skeleton provides a complete starting point for building single-page applic
 │   │   └── src/Controller/
 │   └── foo/                  # Example plain Marko module
 │
-├── modules/
-│   ├── inertia/              # Core Inertia.js adapter (middleware, shared data, lazy props, SSR client)
-│   ├── inertia-vue/          # Vue-specific Inertia companion package
-│   ├── inertia-react/        # React-specific Inertia companion package
-│   ├── inertia-svelte/       # Svelte-specific Inertia companion package
-│   └── vite/                 # Vite integration (manifest resolution, dev-server detection)
+├── modules/                  # Optional local Marko modules
+│
+├── packages/                 # Ignored local path repository packages used during development
+│   ├── inertia/              # marko/inertia
+│   ├── inertia-vue/          # marko/inertia-vue
+│   ├── inertia-react/        # marko/inertia-react
+│   ├── inertia-svelte/       # marko/inertia-svelte
+│   └── vite/                 # marko/vite
 │
 ├── config/                   # Root configuration
 ├── storage/                  # Logs, cache, sessions
@@ -152,6 +154,8 @@ The Docker configuration sets `VITE_DEV_SERVER_URL=http://localhost:5174` for yo
 
 The container uses named volumes for `node_modules`, `vendor`, `bootstrap/ssr`, and `public/build` to avoid conflicts between host and container filesystems.
 
+The local `packages/` directory is ignored by the main app repository but is still part of the Docker build context. Docker copies it before `composer install` so Composer can resolve the Marko path repository packages.
+
 If Docker reports a missing JavaScript package after dependencies change, refresh the named volumes:
 
 ```bash
@@ -165,21 +169,29 @@ docker compose up --build
 
 ### Inertia.js Integration
 
-The project includes a custom Inertia.js adapter built specifically for Marko:
+The project includes custom Inertia.js packages built specifically for Marko. In this workspace they live in `packages/` and are installed into the application through Composer path repositories. The directory is ignored by the main app repository so those packages can be versioned separately.
 
-- **`modules/inertia`** — Core protocol implementation:
+- **`marko/inertia`** — Core protocol implementation:
   - `Inertia` response factory with shared data and lazy prop evaluation
   - `InertiaMiddleware` — handles `X-Inertia` headers, `Vary: Accept`, and asset version mismatch responses
   - `SsrClient` — POSTs render requests to the Node.js SSR server
   - Flash message support
 
-- **`modules/inertia-vue`** — Vue 3 companion package with configuration for root views, Vite, and SSR settings
+- **`marko/inertia-vue`** — Vue 3 companion package with configuration for root views, Vite, and SSR settings
 
-- **`modules/inertia-react`** — React companion package with client and SSR entry configuration
+- **`marko/inertia-react`** — React companion package with client and SSR entry configuration
 
-- **`modules/inertia-svelte`** — Svelte companion package with client and SSR entry configuration
+- **`marko/inertia-svelte`** — Svelte companion package with client and SSR entry configuration
 
-- **`modules/vite`** — Standalone Vite integration for asset manifest resolution and dev-server tag injection
+- **`marko/vite`** — Standalone Vite integration for asset manifest resolution and dev-server tag injection
+
+Require only the adapter packages your app uses. Each adapter pulls in `marko/inertia` and `marko/vite` transitively:
+
+```bash
+composer require marko/inertia-vue
+composer require marko/inertia-react
+composer require marko/inertia-svelte
+```
 
 ### Module System
 
@@ -230,7 +242,7 @@ The React and Svelte demos show the pattern for adding an alternate Inertia adap
 2. Add a controller that calls `$this->inertia->render(..., assetEntry: 'app/react-web/resources/js/app.jsx')`.
 3. Add a Vite entry file that calls the adapter's `createInertiaApp`.
 4. Register the entry in `vite.config.js` under `build.rollupOptions.input`.
-5. Add a companion module under `modules/` if the adapter needs shared config.
+5. Add or require a companion Marko package if the adapter needs shared config.
 
 ---
 
@@ -242,12 +254,12 @@ Tests are written with [Pest PHP](https://pestphp.com/):
 # Run all tests
 vendor/bin/pest
 
-# Run tests for a specific module
-vendor/bin/pest modules/vite/tests
-vendor/bin/pest modules/inertia/tests
-vendor/bin/pest modules/inertia-vue/tests
-vendor/bin/pest modules/inertia-react/tests
-vendor/bin/pest modules/inertia-svelte/tests
+# Run tests for a specific package in this workspace
+vendor/bin/pest packages/vite/tests
+vendor/bin/pest packages/inertia/tests
+vendor/bin/pest packages/inertia-vue/tests
+vendor/bin/pest packages/inertia-react/tests
+vendor/bin/pest packages/inertia-svelte/tests
 ```
 
 ---

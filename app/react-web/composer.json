@@ -1,8 +1,10 @@
 {
   "name": "app/react-web",
   "type": "marko-module",
+  "description": "React Inertia demo module for the Marko application skeleton",
+  "license": "MIT",
   "require": {
-    "marko/inertia-react": "*"
+    "marko/inertia-react": "^0.1.0"
   },
   "autoload": {
     "psr-4": {

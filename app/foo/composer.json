@@ -1,6 +1,8 @@
 {
   "name": "app/foo",
   "type": "marko-module",
+  "description": "Example plain Marko application module",
+  "license": "MIT",
   "autoload": {
     "psr-4": {
       "App\\Foo\\": "src/"

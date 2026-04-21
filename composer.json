@@ -3,11 +3,30 @@
     "description": "Marko Framework - Application Skeleton",
     "license": "MIT",
     "type": "project",
+    "repositories": [
+        {
+            "type": "path",
+            "url": "packages/*",
+            "options": {
+                "symlink": true,
+                "versions": {
+                    "marko/inertia": "0.1.0",
+                    "marko/inertia-react": "0.1.0",
+                    "marko/inertia-svelte": "0.1.0",
+                    "marko/inertia-vue": "0.1.0",
+                    "marko/vite": "0.1.0"
+                }
+            }
+        }
+    ],
     "require": {
         "php": "^8.5",
-        "marko/env": "*",
-        "marko/framework": "*",
+        "marko/env": "^0.1.0",
+        "marko/framework": "^0.1.0",
         "marko/authentication": "^0.1.0",
+        "marko/inertia-react": "^0.1.0",
+        "marko/inertia-svelte": "^0.1.0",
+        "marko/inertia-vue": "^0.1.0",
         "marko/session": "^0.1.0",
         "marko/session-file": "^0.1.0"
     },
@@ -20,12 +39,7 @@
             "App\\Foo\\": "app/foo/src/",
             "App\\Web\\": "app/web/src/",
             "App\\ReactWeb\\": "app/react-web/src/",
-            "App\\SvelteWeb\\": "app/svelte-web/src/",
-            "Marko\\Vite\\": "modules/vite/src/",
-            "Marko\\Inertia\\": "modules/inertia/src/",
-            "Marko\\InertiaVue\\": "modules/inertia-vue/src/",
-            "Marko\\InertiaReact\\": "modules/inertia-react/src/",
-            "Marko\\InertiaSvelte\\": "modules/inertia-svelte/src/"
+            "App\\SvelteWeb\\": "app/svelte-web/src/"
         }
     },
     "scripts": {

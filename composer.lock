@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3e3b98573eff34a3b991fded7fc5325e",
+    "content-hash": "17d7130603781b2d29906028fd3aa698",
     "packages": [
         {
             "name": "marko/authentication",
@@ -179,7 +179,7 @@
         },
         {
             "name": "marko/env",
-            "version": "0.1.0",
+            "version": "0.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marko-php/marko-env.git",
@@ -212,7 +212,7 @@
             ],
             "description": "Environment variable loading for Marko applications",
             "support": {
-                "source": "https://github.com/marko-php/marko-env/tree/0.1.0"
+                "source": "https://github.com/marko-php/marko-env/tree/0.1.3"
             },
             "time": "2026-03-25T17:53:35+00:00"
         },
@@ -402,6 +402,175 @@
             "time": "2026-03-25T17:53:35+00:00"
         },
         {
+            "name": "marko/inertia",
+            "version": "0.1.0",
+            "dist": {
+                "type": "path",
+                "url": "packages/inertia",
+                "reference": "846729a02165d58056147d9a173d8385967a1541"
+            },
+            "require": {
+                "marko/config": "^0.1.0",
+                "marko/core": "^0.1.0",
+                "marko/routing": "^0.1.0",
+                "marko/vite": "^0.1.0",
+                "php": "^8.5"
+            },
+            "require-dev": {
+                "pestphp/pest": "^4.0"
+            },
+            "type": "marko-module",
+            "extra": {
+                "marko": {
+                    "module": true
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Marko\\Inertia\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Marko\\Inertia\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Inertia.js protocol integration for the Marko Framework — middleware, response factory, shared data, and SSR support",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "marko/inertia-react",
+            "version": "0.1.0",
+            "dist": {
+                "type": "path",
+                "url": "packages/inertia-react",
+                "reference": "b3369b798e1fc5e09fd0d532e513607346d27025"
+            },
+            "require": {
+                "marko/core": "^0.1.0",
+                "marko/inertia": "^0.1.0",
+                "marko/vite": "^0.1.0",
+                "php": "^8.5"
+            },
+            "require-dev": {
+                "pestphp/pest": "^4.0"
+            },
+            "type": "marko-module",
+            "extra": {
+                "marko": {
+                    "module": true
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Marko\\InertiaReact\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Marko\\InertiaReact\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "React companion for marko/inertia — configuration for React client and SSR entries",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "marko/inertia-svelte",
+            "version": "0.1.0",
+            "dist": {
+                "type": "path",
+                "url": "packages/inertia-svelte",
+                "reference": "70c5d9132fa8b13938ef499ba466b2ad49432a7b"
+            },
+            "require": {
+                "marko/core": "^0.1.0",
+                "marko/inertia": "^0.1.0",
+                "marko/vite": "^0.1.0",
+                "php": "^8.5"
+            },
+            "require-dev": {
+                "pestphp/pest": "^4.0"
+            },
+            "type": "marko-module",
+            "extra": {
+                "marko": {
+                    "module": true
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Marko\\InertiaSvelte\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Marko\\InertiaSvelte\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Svelte companion for marko/inertia — configuration for Svelte client and SSR entries",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
+            "name": "marko/inertia-vue",
+            "version": "0.1.0",
+            "dist": {
+                "type": "path",
+                "url": "packages/inertia-vue",
+                "reference": "f3dc822ca43ae84b1725dcd51f3fb702351af0c1"
+            },
+            "require": {
+                "marko/core": "^0.1.0",
+                "marko/inertia": "^0.1.0",
+                "marko/vite": "^0.1.0",
+                "php": "^8.5"
+            },
+            "require-dev": {
+                "pestphp/pest": "^4.0"
+            },
+            "type": "marko-module",
+            "extra": {
+                "marko": {
+                    "module": true
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Marko\\InertiaVue\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Marko\\InertiaVue\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Vue 3 companion for marko/inertia — scaffolding and SSR server entry point",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
+        },
+        {
             "name": "marko/routing",
             "version": "0.1.0",
             "source": {
@@ -562,6 +731,47 @@
                 "source": "https://github.com/marko-php/marko-validation/tree/0.1.0"
             },
             "time": "2026-03-25T17:53:35+00:00"
+        },
+        {
+            "name": "marko/vite",
+            "version": "0.1.0",
+            "dist": {
+                "type": "path",
+                "url": "packages/vite",
+                "reference": "835f37260af0177f7a98a63cbde033b6386bbd7c"
+            },
+            "require": {
+                "marko/config": "^0.1.0",
+                "marko/core": "^0.1.0",
+                "php": "^8.5"
+            },
+            "require-dev": {
+                "pestphp/pest": "^4.0"
+            },
+            "type": "marko-module",
+            "extra": {
+                "marko": {
+                    "module": true
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Marko\\Vite\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Marko\\Vite\\Tests\\": "tests/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Vite integration for the Marko Framework — asset manifest resolution and dev-server detection",
+            "transport-options": {
+                "symlink": true,
+                "relative": true
+            }
         },
         {
             "name": "psr/container",
