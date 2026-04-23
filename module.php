@@ -7,7 +7,6 @@ use Marko\Core\Container\ContainerInterface;
 use Marko\Inertia\Inertia;
 use Marko\Inertia\Ssr\SsrClient;
 use Marko\Vite\Vite;
-use RuntimeException;
 
 return [
     'enabled' => true,
