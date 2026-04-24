@@ -13,6 +13,10 @@ readonly class CurlSsrTransport implements SsrTransportInterface
 
     public function post(string $url, string $body): ?string
     {
+        if (! function_exists('curl_init')) {
+            return null;
+        }
+
         $handle = curl_init($url);
 
         if ($handle === false) {

@@ -3,21 +3,12 @@
   "type": "marko-module",
   "description": "Inertia.js protocol integration for the Marko Framework — middleware, response factory, shared data, and SSR support",
   "license": "MIT",
-  "repositories": [
-    {
-      "type": "path",
-      "url": "../marko-vite",
-      "options": {
-        "symlink": true
-      }
-    }
-  ],
   "require": {
     "php": "^8.5",
-    "marko/config": "^0.1.0",
-    "marko/core": "^0.1.0",
-    "marko/routing": "^0.1.0",
-    "marko/vite": "^0.1.0@dev"
+    "marko/config": "self.version",
+    "marko/core": "self.version",
+    "marko/routing": "self.version",
+    "marko/vite": "self.version"
   },
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^3.92",
@@ -40,9 +31,6 @@
     }
   },
   "extra": {
-    "branch-alias": {
-      "dev-main": "0.1.x-dev"
-    },
     "marko": {
       "module": true
     }

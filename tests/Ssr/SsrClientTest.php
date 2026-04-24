@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Marko\Inertia\Ssr\CurlSsrTransport;
 use Marko\Inertia\Ssr\SsrClient;
 use Marko\Inertia\Ssr\SsrTransportInterface;
 
@@ -36,6 +37,13 @@ test('ssr client returns null for transport failures and invalid payloads', func
     'missing body' => ['{"head":"<title>Dashboard</title>"}'],
     'empty body' => ['{"head":"<title>Dashboard</title>","body":""}'],
 ]);
+
+test('curl ssr transport returns null when curl extension is unavailable', function () {
+    expect((new CurlSsrTransport())->post('http://localhost:13714/render', '{}'))->toBeNull();
+})->skip(
+    function_exists('curl_init'),
+    'The curl extension is available in this environment.',
+);
 
 final class FakeSsrTransport implements SsrTransportInterface
 {
