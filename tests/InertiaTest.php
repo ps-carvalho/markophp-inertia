@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
-use Marko\Config\ConfigRepository;
 use Marko\Core\Path\ProjectPaths;
 use Marko\Inertia\Inertia;
 use Marko\Inertia\Ssr\SsrClient;
+use Marko\Inertia\Ssr\SsrTransportInterface;
 use Marko\Routing\Http\Request;
+use Marko\Testing\Fake\FakeConfigRepository;
+use Marko\Testing\Fake\FakeSession;
 use Marko\Vite\Vite;
 
 beforeEach(function () {
@@ -16,29 +18,27 @@ beforeEach(function () {
 
 function createInertia(array $config = [], array $viteConfig = []): Inertia
 {
-    $mergedConfig = new ConfigRepository(array_merge([
-        'inertia' => [
-            'rootView' => 'app',
-            'version' => '1.0',
-            'ssr' => [
-                'enabled' => false,
-                'url' => 'http://localhost:13714',
-            ],
-        ],
-        'vite' => array_merge([
-            'entry' => 'app/web/resources/js/app.js',
-            'buildDirectory' => 'build',
-            'manifestFilename' => '.vite/manifest.json',
-            'devServerUrl' => 'http://localhost:5173',
-            'useDevServer' => false,
-        ], $viteConfig),
-    ], $config));
+    $mergedConfig = new FakeConfigRepository(array_merge([
+        'inertia.rootView' => 'app',
+        'inertia.version' => '1.0',
+        'inertia.ssr.enabled' => false,
+        'inertia.ssr.url' => 'http://localhost:13714',
+        'vite.entry' => 'app/web/resources/js/app.js',
+        'vite.buildDirectory' => 'build',
+        'vite.manifestFilename' => '.vite/manifest.json',
+        'vite.devServerUrl' => 'http://localhost:5173',
+        'vite.devServerStylesheets' => [],
+        'vite.useDevServer' => false,
+    ], $config, array_combine(
+        array_map(static fn (string $key): string => "vite.{$key}", array_keys($viteConfig)),
+        array_values($viteConfig),
+    ) ?: []));
 
     $paths = new ProjectPaths(dirname(__DIR__));
     $vite = new Vite($mergedConfig, $paths);
-    $ssrClient = new SsrClient('http://localhost:13714');
+    $ssrClient = new SsrClient('http://localhost:13714', new NullSsrTransport());
 
-    return new Inertia($mergedConfig, $vite, $ssrClient);
+    return new Inertia($mergedConfig, $vite, $ssrClient, new FakeSession());
 }
 
 test('inertia returns json for inertia requests', function () {
@@ -236,7 +236,7 @@ test('inertia includes flash in partial reloads', function () {
     ]);
 
     $data = json_decode($response->body(), true);
-    expect($data['props']['flash']['success'])->toBe('Saved!');
+    expect($data['props']['flash']['success'])->toBe(['Saved!']);
     expect($data['props']['user']['name'])->toBe('Test');
 });
 
@@ -249,7 +249,7 @@ test('inertia clears flash after it is rendered once', function () {
     $first = json_decode($inertia->render($request, 'Dashboard')->body(), true);
     $second = json_decode($inertia->render($request, 'Dashboard')->body(), true);
 
-    expect($first['props']['flash']['success'])->toBe('Saved!');
+    expect($first['props']['flash']['success'])->toBe(['Saved!']);
     expect($second['props']['flash'])->toBe([]);
 });
 
@@ -264,3 +264,11 @@ test('inertia html response escapes embedded page json safely', function () {
     expect($response->body())->not->toContain('</script><script>alert');
     expect($response->body())->toContain('\\u003C\\/script\\u003E');
 });
+
+final class NullSsrTransport implements SsrTransportInterface
+{
+    public function post(string $url, string $body): ?string
+    {
+        return null;
+    }
+}

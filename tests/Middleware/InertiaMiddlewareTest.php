@@ -2,16 +2,14 @@
 
 declare(strict_types=1);
 
-use Marko\Config\ConfigRepository;
 use Marko\Inertia\Middleware\InertiaMiddleware;
 use Marko\Routing\Http\Request;
 use Marko\Routing\Http\Response;
+use Marko\Testing\Fake\FakeConfigRepository;
 
 beforeEach(function () {
-    $this->config = new ConfigRepository([
-        'inertia' => [
-            'version' => '1.0',
-        ],
+    $this->config = new FakeConfigRepository([
+        'inertia.version' => '1.0',
     ]);
     $this->middleware = new InertiaMiddleware($this->config);
 });

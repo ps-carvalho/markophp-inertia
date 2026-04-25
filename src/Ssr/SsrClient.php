@@ -8,14 +8,10 @@ use JsonException;
 
 readonly class SsrClient
 {
-    private SsrTransportInterface $transport;
-
     public function __construct(
         private string $url,
-        ?SsrTransportInterface $transport = null,
-    ) {
-        $this->transport = $transport ?? new CurlSsrTransport();
-    }
+        private SsrTransportInterface $transport,
+    ) {}
 
     /**
      * Render a page via the Inertia SSR server.

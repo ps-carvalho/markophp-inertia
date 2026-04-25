@@ -10,6 +10,7 @@ use Marko\Config\ConfigRepositoryInterface;
 use Marko\Inertia\Ssr\SsrClient;
 use Marko\Routing\Http\Request;
 use Marko\Routing\Http\Response;
+use Marko\Session\Contracts\SessionInterface;
 use Marko\Vite\Vite;
 use stdClass;
 use Throwable;
@@ -19,13 +20,11 @@ class Inertia
     /** @var array<string, mixed> */
     private array $shared = [];
 
-    /** @var array<string, mixed> */
-    private array $flash = [];
-
     public function __construct(
         private readonly ConfigRepositoryInterface $config,
         private readonly Vite $vite,
         private readonly SsrClient $ssrClient,
+        private readonly SessionInterface $session,
     ) {}
 
     /**
@@ -47,14 +46,19 @@ class Inertia
     }
 
     /**
-     * Flash a message to the session (stored for next request).
+     * Flash a message to the session for the next request.
      *
-     * In a real app this would use session storage. For now we store
-     * in-memory which works for single-request demos.
+     * @param string|list<string> $value
      */
-    public function flash(string $key, mixed $value = null): void
+    public function flash(string $key, string|array $value): void
     {
-        $this->flash[$key] = $value;
+        if (is_array($value)) {
+            $this->session->flash()->set($key, $value);
+
+            return;
+        }
+
+        $this->session->flash()->add($key, $value);
     }
 
     /**
@@ -148,14 +152,11 @@ class Inertia
         $allProps = array_merge(
             [
                 'errors' => new stdClass(),
-                'flash' => $this->flash,
+                'flash' => $this->session->flash()->all(),
             ],
             $this->shared,
             $props,
         );
-
-        // Clear flash after reading
-        $this->flash = [];
 
         // Check if this is a partial reload request
         $partialComponent = $request->header('X-Inertia-Partial-Component');

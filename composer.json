@@ -7,13 +7,16 @@
     "php": "^8.5",
     "marko/config": "self.version",
     "marko/core": "self.version",
+    "marko/env": "self.version",
     "marko/routing": "self.version",
+    "marko/session": "self.version",
     "marko/vite": "self.version"
   },
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^3.92",
     "pestphp/pest": "^4.0",
-    "phpstan/phpstan": "^2.1"
+    "phpstan/phpstan": "^2.1",
+    "marko/testing": "self.version"
   },
   "autoload": {
     "psr-4": {
